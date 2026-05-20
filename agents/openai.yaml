@@ -1,0 +1,4 @@
+interface:
+  display_name: "AGENTS.md 明確化監査"
+  short_description: "AGENTS.md の対象解決、SSOT 宣言、周辺指示との整合を実行条件として締める監査 skill"
+  default_prompt: "Use $agents-md-clarifier to resolve and audit a global or local AGENTS.md, add a missing scoped SSOT declaration, check nearby instruction alignment, and rewrite weak wording into explicit execution conditions."

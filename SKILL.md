@@ -1,6 +1,6 @@
 ---
 name: agents-md-clarifier
-description: Use when the user wants to create, review, tighten, or refactor a global or local AGENTS.md so instructions act as explicit execution conditions rather than soft guidance. Covers target AGENTS.md resolution, SSOT declaration insertion, ambiguity audits, wording hardening, role and tool boundary clarification, nearby instruction alignment checks, and converting weak phrasing into operational rules.
+description: Use when the user wants to create, review, tighten, or refactor a global or local AGENTS.md so instructions act as explicit execution conditions rather than soft guidance. Covers target AGENTS.md resolution, SSOT declaration insertion, ambiguity audits, wording hardening, reasoning and verification contract checks, role and tool boundary clarification, maintenance-gate checks, nearby instruction alignment checks, and converting weak phrasing into operational rules.
 ---
 
 # AGENTS.md Clarifier
@@ -85,14 +85,19 @@ Do not audit multiple `AGENTS.md` files in one pass unless the user explicitly a
    - subordinate alignment issue: the nearby text should be rewritten to follow `AGENTS.md`
    - migration candidate: the nearby text contains a durable execution rule that belongs in `AGENTS.md`
    - non-binding context: the nearby text can remain explanatory and must not be treated as an execution contract
-8. Distinguish three categories:
+8. Check whether high-risk decisions, debugging, review, source-of-truth edits, skill/plugin maintenance, hooks, MCP/app settings, external writes, deletion, and persistent data changes have an explicit reasoning and verification contract. The contract must separate premises, evidence, counterevidence or exception checks, unknowns, validation results, and stop conditions when those elements affect execution.
+9. Check AGENTS.md maintenance gates:
+   - If the target governs global or reusable Codex behavior, it must say that creating, revising, or materially updating an `AGENTS.md` requires `agents-md-clarifier` before final reporting, cache/runtime reflection, or commit.
+   - If the target governs a narrower workspace and clearly inherits the global gate, accept delegation to the global gate; any local override must preserve the same completion condition.
+   - Do not require a local `AGENTS.md` to duplicate the full global contract when it clearly inherits it and does not narrow or override it.
+10. Distinguish three categories:
    - True contradiction: two statements cannot both be followed.
    - Decision ambiguity: the intent is visible but the trigger or priority is under-specified.
    - Weak execution wording: the sentence sounds strict to a human but leaves enough discretion that the model may do nothing.
-9. Rewrite only as much as needed to preserve the user's intended policy while making the action path explicit.
-10. If the user asked for review only, report findings first with precise locations.
-11. If the user asked for edits, patch the file directly and keep the rewritten language terse and operational.
-12. If the change makes `agents/openai.yaml` UI metadata stale, update `display_name`, `short_description`, or `default_prompt` without moving binding execution rules into that file.
+11. Rewrite only as much as needed to preserve the user's intended policy while making the action path explicit.
+12. If the user asked for review only, report findings first with precise locations.
+13. If the user asked for edits, patch the file directly and keep the rewritten language terse and operational.
+14. If the change makes `agents/openai.yaml` UI metadata stale, update `display_name`, `short_description`, or `default_prompt` without moving binding execution rules into that file.
 
 ## Wording Rules
 
@@ -118,6 +123,16 @@ When the target controls role or tool selection, make the boundary executable:
 - Define stop conditions for unresolved target paths, conflicting authorities, missing source-of-truth files, or cache-only files.
 - Keep global rules in global `AGENTS.md` and local workflow rules in the most specific applicable `AGENTS.md` or implementation source.
 - Do not move binding policy into README, comments, memories, or UI metadata unless `AGENTS.md` explicitly delegates that authority.
+
+## Reasoning Contract Checks
+
+When the target touches high-risk execution, make the reasoning path executable:
+
+- Require Codex to separate premises, evidence, counterevidence or exception checks, unknowns, and validation results before finalizing the action.
+- Treat numeric confidence, named prompting techniques, persona debate, and self-review as insufficient unless they are tied to concrete evidence and verification conditions.
+- Require explicit stop conditions when evidence is missing, the source of truth cannot be resolved, validation cannot be run, or competing authorities conflict.
+- Keep reusable global reasoning policy in global `AGENTS.md`; put only local refinements or stricter gates into local `AGENTS.md`.
+- When auditing a skill, plugin, hook, or nearby workflow against `AGENTS.md`, flag missing reasoning-contract handling as a subordinate alignment issue unless the target is intentionally simple and has no high-risk judgment surface.
 
 ## What To Preserve
 
@@ -156,6 +171,8 @@ Pay extra attention to these recurrent failure patterns:
 - `AGENTS.md` files that lack an SSOT or equivalent execution-contract declaration
 - "soft" verbs that lead to non-action
 - instructions that describe intent but not trigger conditions
+- reasoning requirements that do not separate premises, evidence, counterevidence, unknowns, validation, and stop conditions
+- `AGENTS.md` maintenance rules that do not require `agents-md-clarifier` as an editing completion gate
 - tool descriptions that do not define role boundaries
 - sequencing rules that rely on implied order
 - delegation text that says "first candidate" but does not actually require delegation

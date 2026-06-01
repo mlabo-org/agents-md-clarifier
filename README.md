@@ -17,6 +17,41 @@ This skill audits and rewrites `AGENTS.md` with explicit triggers, priorities, t
 - Tightens tool-role boundaries, including browser tools, Computer Use, subagents, and external memory.
 - Preserves user intent while reducing interpretive drift.
 
+## Before And After
+
+Before:
+
+```md
+# AGENTS.md
+
+Please prefer using the browser when appropriate.
+Generally avoid editing unrelated files.
+Review changes before finishing.
+```
+
+After:
+
+```md
+# AGENTS.md
+
+This file is the local AGENTS.md for this repository and defines the execution contract for Codex within this scope.
+
+## Browser Work
+
+- If a task requires opening, inspecting, clicking, typing, or screenshotting a web page, use the Browser tool first.
+- If the Browser tool is unavailable, report the unavailable condition and ask before switching to another browser route.
+
+## File Edits
+
+- Edit only files required by the current request.
+- Do not modify unrelated files unless the user explicitly expands the scope.
+
+## Completion
+
+- After file edits, run `git status --short` before the final response.
+- In the final response, summarize changed files and verification results.
+```
+
 ## Repository Layout
 
 ```text

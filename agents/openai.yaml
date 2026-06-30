@@ -1,4 +1,4 @@
 interface:
   display_name: "AGENTS.md 明確化監査"
-  short_description: "AGENTS.md の対象解決、SSOT 宣言、reasoning 契約、保守ゲート、周辺指示との整合を実行条件として締める監査 skill"
-  default_prompt: "Use $agents-md-clarifier to resolve and audit a global or local AGENTS.md, add a missing scoped SSOT declaration, check reasoning and verification contracts, check AGENTS.md maintenance gates, check nearby instruction alignment, and rewrite weak wording into explicit execution conditions."
+  short_description: "Audit/edit AGENTS.md execution contracts, SSOT, reasoning gates, and weak wording"
+  default_prompt: "Use $agents-md-clarifier to audit or edit a global/local AGENTS.md execution contract: resolve the target, add missing SSOT wording, tighten weak instructions, check reasoning/verification gates, maintenance gates, tool/delegation boundaries, and nearby instruction alignment."

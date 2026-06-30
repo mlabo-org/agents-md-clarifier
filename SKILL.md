@@ -1,6 +1,6 @@
 ---
 name: agents-md-clarifier
-description: Use when the user wants to create, review, tighten, or refactor a global or local AGENTS.md so instructions act as explicit execution conditions rather than soft guidance. Covers target AGENTS.md resolution, SSOT declaration insertion, ambiguity audits, wording hardening, reasoning and verification contract checks, role and tool boundary clarification, maintenance-gate checks, nearby instruction alignment checks, and converting weak phrasing into operational rules.
+description: "Audit/edit global/local AGENTS.md execution contracts: SSOT declarations, weak wording, reasoning/verification gates, maintenance rules, tool/delegation boundaries, and nearby instruction alignment. Use for AGENTS.md creation, review, tightening, or refactor."
 ---
 
 # AGENTS.md Clarifier

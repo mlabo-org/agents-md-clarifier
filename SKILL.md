@@ -1,6 +1,6 @@
 ---
 name: agents-md-clarifier
-description: "Audit/edit global/local AGENTS.md execution contracts: SSOT declarations, weak wording, reasoning/verification gates, maintenance rules, tool/delegation boundaries, and nearby instruction alignment. Use for AGENTS.md creation, review, tightening, or refactor."
+description: "Audit/edit global/local AGENTS.md execution contracts: SSOT declarations, weak wording, producer ownership and verification topology, reasoning gates, maintenance rules, tool/delegation boundaries, and nearby instruction alignment. Use for AGENTS.md creation, review, tightening, or refactor."
 ---
 
 # AGENTS.md Clarifier
@@ -90,10 +90,11 @@ Do not audit multiple `AGENTS.md` files in one pass unless the user explicitly a
    - If the target governs global or reusable Codex behavior, it must say that creating, revising, or materially updating an `AGENTS.md` requires `agents-md-clarifier` before final reporting, cache/runtime reflection, or commit.
    - If the target governs a narrower workspace and clearly inherits the global gate, accept delegation to the global gate; any local override must preserve the same completion condition.
    - Do not require a local `AGENTS.md` to duplicate the full global contract when it clearly inherits it and does not narrow or override it.
-10. Distinguish three categories:
+10. Distinguish four categories:
    - True contradiction: two statements cannot both be followed.
    - Decision ambiguity: the intent is visible but the trigger or priority is under-specified.
    - Weak execution wording: the sentence sounds strict to a human but leaves enough discretion that the model may do nothing.
+   - Producer-quality / verification-topology defect: the contract defers semantic quality to a later layer, launders or duplicates a binding check, or adds a same-decision post-success gate.
 11. Rewrite only as much as needed to preserve the user's intended policy while making the action path explicit.
 12. If the user asked for review only, report findings first with precise locations.
 13. If the user asked for edits, patch the file directly and keep the rewritten language terse and operational.
@@ -133,6 +134,22 @@ When the target touches high-risk execution, make the reasoning path executable:
 - Require explicit stop conditions when evidence is missing, the source of truth cannot be resolved, validation cannot be run, or competing authorities conflict.
 - Keep reusable global reasoning policy in global `AGENTS.md`; put only local refinements or stricter gates into local `AGENTS.md`.
 - When auditing a skill, plugin, hook, or nearby workflow against `AGENTS.md`, flag missing reasoning-contract handling as a subordinate alignment issue unless the target is intentionally simple and has no high-risk judgment surface.
+
+## Producer Quality And Verification Topology
+
+The authoring producer owns first-pass semantic quality. An applicable `agents-md-clarifier` run is an explicitly selected maintenance audit that confirms the final contract after an `AGENTS.md` edit; it is not a recurring application/output gate or a substitute producer.
+
+Classify a producer-quality / verification-topology defect when the target:
+
+- defines `draft -> review/validator -> repair` as the normal successful path, or intentionally leaves known semantic requirements for a downstream layer
+- performs gate relabeling or binding-check laundering by calling a binding check review, audit, advisory, optional, or another name while it still controls the same completion decision
+- serializes duplicate semantic bundles over the same evidence, implementation path, and decision
+- adds a post-success second layer without distinct new evidence that would change the decision
+- permits lower-layer first-pass bypass of a higher-priority producer-quality or minimum-verification rule
+
+Accept a coherent first pass followed by one minimum verification bundle containing the binding checks, primary-path evidence, and task-evidenced distinct failures. A failed check may trigger repair of the affected scope and a targeted rerun. Do not flag the single applicable clarifier maintenance audit merely because it follows editing; flag reliance on that audit to create semantics, duplication of its decision, or an added post-success layer. Do not require an ordinary bounded contract with no high-risk judgment surface to add a generic reasoning checklist, reviewer, validator, or second gate.
+
+When this defect appears, assign semantic production to the producer, consolidate same-decision checks into the minimum bundle, and remove unsupported post-success layers. This category audits responsibility and verification topology; it does not move artifact-specific production decision logic into `AGENTS.md`.
 
 ## What To Preserve
 

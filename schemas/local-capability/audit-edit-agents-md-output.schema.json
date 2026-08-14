@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agents-md-clarifier/audit-edit-agents-md-output/v1",
+  "title": "AGENTS.md Clarifier Output",
+  "description": "The completed result of auditing or editing one AGENTS.md execution contract.",
+  "type": "object",
+  "required": [
+    "target",
+    "operation",
+    "ssotDeclaration",
+    "findings",
+    "changes",
+    "validation",
+    "artifacts"
+  ],
+  "properties": {
+    "target": {
+      "type": "object",
+      "required": [
+        "path",
+        "scope"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "enum": [
+            "global",
+            "local"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "operation": {
+      "enum": [
+        "review",
+        "edit"
+      ]
+    },
+    "ssotDeclaration": {
+      "enum": [
+        "added",
+        "already_present",
+        "missing"
+      ],
+      "description": "The observed or changed SSOT/execution-contract declaration status for the target."
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "issue",
+          "whyItWeakensExecution",
+          "location",
+          "tighterRewrite"
+        ],
+        "properties": {
+          "category": {
+            "enum": [
+              "true_contradiction",
+              "decision_ambiguity",
+              "weak_execution_wording",
+              "producer_quality_verification_topology_defect",
+              "subordinate_alignment_issue",
+              "migration_candidate",
+              "non_binding_context"
+            ]
+          },
+          "issue": {
+            "type": "string",
+            "minLength": 1
+          },
+          "whyItWeakensExecution": {
+            "type": "string",
+            "minLength": 1
+          },
+          "location": {
+            "type": "string",
+            "minLength": 1
+          },
+          "tighterRewrite": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "summary"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "An empty array is required for a review or when no target-scoped edit was necessary."
+    },
+    "validation": {
+      "type": "object",
+      "required": [
+        "authoritativeSkillRead",
+        "targetResolved",
+        "targetRead",
+        "checks"
+      ],
+      "properties": {
+        "authoritativeSkillRead": {
+          "const": true
+        },
+        "targetResolved": {
+          "const": true
+        },
+        "targetRead": {
+          "const": true
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "status"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "status": {
+                "enum": [
+                  "passed",
+                  "unverified"
+                ]
+              },
+              "detail": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "kind",
+          "description"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "target_document",
+              "inline_report"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "Result references only; these are not broker-portable artifacts because the target path is user-owned and outside this skill package."
+    }
+  },
+  "additionalProperties": false
+}

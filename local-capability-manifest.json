@@ -1,0 +1,42 @@
+{
+  "manifestVersion": "local-capability-manifest/v1",
+  "publisher": "suzuki-makoto",
+  "packageKind": "standalone-skill",
+  "packageId": "agents-md-clarifier",
+  "descriptorVersion": "1.0.0",
+  "capabilities": [
+    {
+      "leafId": "audit-edit-agents-md",
+      "title": "Audit or Edit an AGENTS.md Execution Contract",
+      "description": "Resolve one declared AGENTS.md target, then audit it or apply the requested contract-tightening edits according to the authoritative agents-md-clarifier skill.",
+      "executionClass": "host_model_with_tools",
+      "runtimeBinding": {
+        "kind": "host_model_with_tools",
+        "instruction": "Select $agents-md-clarifier and read its authoritative SKILL.md completely before work. Resolve exactly the requested target AGENTS.md, then follow the skill's audit or edit workflow for the requested operation. Use only the declared host tools when needed. For an edit, make only the target-scoped, user-requested change and preserve unrelated work. Return a complete first handoff that satisfies the declared output schema: target resolution, SSOT status, precise findings, changes, validation evidence, and artifact summary. Stop with a typed stop result when the target is ambiguous, unavailable, cache-only, or conflicts with higher authority; do not invent a fallback target or tool result.",
+        "allowedTools": [
+          "exec_command",
+          "apply_patch"
+        ]
+      },
+      "authorityRequests": [
+        {
+          "authority": "filesystem_write",
+          "reason": "Only when operation is edit, apply the user-authorized changes to the resolved target AGENTS.md."
+        }
+      ],
+      "artifactRoots": [],
+      "inputSchema": {
+        "schemaVersion": "local-capability-schema/v1",
+        "schemaId": "agents-md-clarifier/audit-edit-agents-md-input/v1",
+        "path": "schemas/local-capability/audit-edit-agents-md-input.schema.json"
+      },
+      "outputSchema": {
+        "schemaVersion": "local-capability-schema/v1",
+        "schemaId": "agents-md-clarifier/audit-edit-agents-md-output/v1",
+        "path": "schemas/local-capability/audit-edit-agents-md-output.schema.json"
+      },
+      "inputPorts": [],
+      "outputPorts": []
+    }
+  ]
+}

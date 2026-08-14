@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agents-md-clarifier/audit-edit-agents-md-input/v1",
+  "title": "AGENTS.md Clarifier Input",
+  "description": "A request to audit or edit exactly one explicit AGENTS.md execution contract.",
+  "type": "object",
+  "required": [
+    "targetPath",
+    "operation",
+    "request"
+  ],
+  "properties": {
+    "targetPath": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The explicit filesystem path to the one AGENTS.md target."
+    },
+    "operation": {
+      "enum": [
+        "review",
+        "edit"
+      ],
+      "description": "Review reports findings without modifying the target; edit applies only the requested target-scoped changes."
+    },
+    "request": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The user's requested audit focus or edit outcome."
+    },
+    "includeNearbyInstructions": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether to inspect nearby instruction sources only for alignment against the target, as defined by the authoritative skill."
+    }
+  },
+  "additionalProperties": false
+}

@@ -16,21 +16,21 @@
 
 このスキルは、ユーザーの意図と local-over-global の優先順位を維持します。任意のスタイル上の好みを新しいポリシーに変えたり、clarifier の監査を first-pass semantic ownership の代わりに使ったりしません。
 
-### 現在のソース兼 discovery、GitHub の関係
+### 保守ソースと公開リポジトリの関係
 
 このスキルの保守環境では、次の二者を同じ Git 履歴として管理します。
 
-- 物理正本、Git working tree、Codex USER discovery: `/Users/suzukimakoto/.agents/skills/agents-md-clarifier/`
+- 保守用の正本・Git working tree・Codex USER discovery: この skill を配置したユーザーskillディレクトリ
 - 同じ Git 履歴の公開 remote: [mlabo-org/agents-md-clarifier](https://github.com/mlabo-org/agents-md-clarifier)
 
-編集はこの物理正本だけで行います。Codex は同じ checkout を直接読み込むため、standalone runtime copy や refresh は作りません。変更はこの repository に commit し、公開する場合は同じ commit を GitHub の `origin/main` に push します。GitHub 用の別 checkout や別の正本は作りません。
+編集は保守用の正本だけで行います。Codex はその正本を直接読み込む構成を前提とし、cacheやruntime copyを正本にしません。変更はこのrepositoryにcommitし、公開する場合は同じcommitをGitHubの`origin/main`へpushします。
 
 ### 公開版のインストール
 
 通常の standalone skill として直接インストールする場合は、公開 repository を Codex の skill directory に clone します。
 
 ```bash
-git clone https://github.com/mlabo-org/agents-md-clarifier.git ~/.agents/skills/agents-md-clarifier
+git clone https://github.com/mlabo-org/agents-md-clarifier.git <user-skill-directory>/agents-md-clarifier
 ```
 
 インストール後は、Codex を再起動するか新しいタスクを開始してください。
@@ -72,21 +72,21 @@ MIT
 
 The skill preserves user intent and local-over-global precedence. It does not turn optional style preferences into new policy or use a clarifier audit as a substitute for first-pass semantic ownership.
 
-### Current source and discovery, and GitHub relationship
+### Maintainer source and public repository relationship
 
 In the maintainer environment, the following two locations share one Git history:
 
-- Physical source, Git working tree, and Codex USER discovery: `/Users/suzukimakoto/.agents/skills/agents-md-clarifier/`
+- Maintainer source, Git working tree, and Codex USER discovery: the user's configured skill directory
 - Public remote for the same Git history: [mlabo-org/agents-md-clarifier](https://github.com/mlabo-org/agents-md-clarifier)
 
-Edits are made only in this physical source. Codex reads the same checkout directly, so no standalone runtime copy or refresh is created. A change is committed in this repository and, when published, the same commit is pushed to GitHub at `origin/main`. No separate GitHub checkout or second source of truth is used.
+Edits are made only in the maintainer source. The source remains authoritative; cache and runtime copies are not treated as source. A change is committed in this repository and, when published, the same commit is pushed to GitHub at `origin/main`.
 
 ### Public installation
 
 To install the public version directly as a standalone skill, clone the repository into the Codex skill directory:
 
 ```bash
-git clone https://github.com/mlabo-org/agents-md-clarifier.git ~/.agents/skills/agents-md-clarifier
+git clone https://github.com/mlabo-org/agents-md-clarifier.git <user-skill-directory>/agents-md-clarifier
 ```
 
 Restart Codex or begin a new task after installation.

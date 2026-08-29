@@ -23,7 +23,7 @@
 - 保守用の正本・Git working tree・Codex USER discovery: この skill を配置したユーザーskillディレクトリ
 - 同じ Git 履歴の公開 remote: [mlabo-org/agents-md-clarifier](https://github.com/mlabo-org/agents-md-clarifier)
 
-編集は保守用の正本だけで行います。Codex はその正本を直接読み込む構成を前提とし、cacheやruntime copyを正本にしません。変更はこのrepositoryにcommitし、公開する場合は同じcommitをGitHubの`origin/main`へpushします。
+編集は保守用の正本だけで行います。Codex はその正本を直接読み込む構成を前提とし、cacheやruntime copyを正本にしません。変更のcommitは、現在の明示的な承認がある場合に限って行います。GitHubへの公開（`origin/main` へのpush）は、公開についての現在の明示的な承認が別途ある場合に限る、commitとは分離した段階です。
 
 ### 公開版のインストール
 
@@ -50,6 +50,11 @@ Use $agents-md-clarifier to audit this AGENTS.md and tighten its execution contr
 ├── SKILL.md
 ├── agents/
 │   └── openai.yaml
+├── local-capability-manifest.json
+├── schemas/
+│   └── local-capability/
+│       ├── audit-edit-agents-md-input.schema.json
+│       └── audit-edit-agents-md-output.schema.json
 ├── LICENSE
 └── README.md
 ```
@@ -79,7 +84,7 @@ In the maintainer environment, the following two locations share one Git history
 - Maintainer source, Git working tree, and Codex USER discovery: the user's configured skill directory
 - Public remote for the same Git history: [mlabo-org/agents-md-clarifier](https://github.com/mlabo-org/agents-md-clarifier)
 
-Edits are made only in the maintainer source. The source remains authoritative; cache and runtime copies are not treated as source. A change is committed in this repository and, when published, the same commit is pushed to GitHub at `origin/main`.
+Edits are made only in the maintainer source. The source remains authoritative; cache and runtime copies are not treated as source. A change is committed in this repository only when currently explicitly authorized. Publishing to GitHub (pushing to `origin/main`) is a separate stage and requires separate current explicit authorization.
 
 ### Public installation
 
@@ -106,6 +111,11 @@ The skill resolves exactly one target `AGENTS.md`, reads it completely, classifi
 ├── SKILL.md
 ├── agents/
 │   └── openai.yaml
+├── local-capability-manifest.json
+├── schemas/
+│   └── local-capability/
+│       ├── audit-edit-agents-md-input.schema.json
+│       └── audit-edit-agents-md-output.schema.json
 ├── LICENSE
 └── README.md
 ```

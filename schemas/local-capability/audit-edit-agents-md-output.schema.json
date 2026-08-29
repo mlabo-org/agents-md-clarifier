@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "agents-md-clarifier/audit-edit-agents-md-output/v1",
   "title": "AGENTS.md Clarifier Output",
-  "description": "The completed result of auditing or editing one AGENTS.md execution contract.",
+  "description": "The successful leaf output of auditing or editing one AGENTS.md execution contract. Stopped jobs use the broker-level local-capability-result/v1 envelope with outcome stopped and a local-capability-stop/v1 stop object; a stop object is not a leaf output.",
   "type": "object",
   "required": [
     "target",
@@ -163,31 +163,45 @@
     "artifacts": {
       "type": "array",
       "items": {
-        "type": "object",
-        "required": [
-          "kind",
-          "description"
-        ],
-        "properties": {
-          "kind": {
-            "enum": [
-              "target_document",
-              "inline_report"
-            ]
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["kind", "path", "description"],
+            "properties": {
+              "kind": { "const": "target_document" },
+              "path": { "type": "string", "minLength": 1 },
+              "description": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
           },
-          "path": {
-            "type": "string",
-            "minLength": 1
-          },
-          "description": {
-            "type": "string",
-            "minLength": 1
+          {
+            "type": "object",
+            "required": ["kind", "description"],
+            "properties": {
+              "kind": { "const": "inline_report" },
+              "description": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
           }
-        },
-        "additionalProperties": false
+        ]
       },
       "description": "Result references only; these are not broker-portable artifacts because the target path is user-owned and outside this skill package."
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "operation": { "const": "edit" } },
+        "required": ["operation"]
+      },
+      "then": {
+        "properties": {
+          "ssotDeclaration": {
+            "enum": ["added", "already_present"]
+          }
+        }
+      }
+    }
+  ],
   "additionalProperties": false
 }

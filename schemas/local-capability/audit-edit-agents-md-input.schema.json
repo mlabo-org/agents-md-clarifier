@@ -12,8 +12,8 @@
   "properties": {
     "targetPath": {
       "type": "string",
-      "minLength": 1,
-      "description": "The explicit filesystem path to the one AGENTS.md target."
+      "pattern": "^/(?:[^/]+/)*AGENTS\\.md$",
+      "description": "The one explicit absolute POSIX filesystem path whose basename is exactly AGENTS.md."
     },
     "operation": {
       "enum": [

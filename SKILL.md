@@ -1,6 +1,6 @@
 ---
 name: agents-md-clarifier
-description: "Audit/edit global/local AGENTS.md execution contracts: SSOT declarations, weak wording, producer ownership and verification topology, reasoning gates, maintenance rules, tool/delegation boundaries, and nearby instruction alignment. Use for AGENTS.md creation, review, tightening, or refactor."
+description: "Audit/edit one global or local AGENTS.md execution contract: SSOT and authority order, weak wording, producer/checker and tool/delegation ownership, maintenance alignment, and nearby instruction drift. Use for AGENTS.md creation, review, tightening, or refactor."
 ---
 
 # AGENTS.md Clarifier
@@ -17,7 +17,8 @@ Use it to tighten wording, remove ambiguity, clarify tool and role boundaries, a
 ## Core Rule
 
 Treat every `AGENTS.md` statement as an execution condition unless it is clearly explanatory context, an example, or an intentionally non-binding note.
-If wording leaves easy escape hatches such as "consider", "prefer", "generally", or "if appropriate", assume the instruction is weaker than intended unless the surrounding context clearly demands discretionary language.
+If wording leaves easy escape hatches such as "consider", bare "prefer", "generally", or "if appropriate", assume the instruction is weaker than intended unless the surrounding context clearly demands discretionary language.
+Treat `prefer X over Y` as an explicit default ordering only when the rule identifies the compared routes and preserves any governing exception or higher-priority condition.
 
 ## SSOT Declaration Rule
 
@@ -27,7 +28,7 @@ When the target `AGENTS.md` does not already declare that it is the SSOT or an e
 - Local target: use a scoped SSOT declaration for any workspace or subdirectory `AGENTS.md`.
 - Do not duplicate an existing equivalent declaration. Treat wording such as "SSOT", "execution contract", "operational contract", "binding instructions", or "source of truth for this scope" as equivalent when it clearly binds Codex behavior.
 - Insert the declaration at the start of the file. If the file has YAML frontmatter, insert it after the frontmatter. If the file begins with a single H1 title, insert it immediately after that title.
-- Preserve priority order: the declaration must not claim authority over system instructions, developer instructions, explicit user requests, or more local `AGENTS.md` files.
+- Preserve the complete applicable priority order. A more-local ordinary rule may specialize an ordinary higher-scope rule, but it must not weaken a higher-priority named invariant or another rule that the applicable authority order places above it.
 
 Use these templates unless the existing document needs narrower wording:
 
@@ -36,7 +37,7 @@ Global:
 ```md
 このファイルは `~/.codex/AGENTS.md` として機能するグローバル指示であり、Codex の共通実行条件を定義する SSOT である。
 本書は助言集ではなく、既定動作、禁止事項、優先順位、ツール選択、検証条件を拘束する運用契約として扱う。
-ワークスペースごとの `AGENTS.md` が存在する場合、本書は共通基盤として扱い、実際の運用ではより局所の `AGENTS.md` を優先する。
+より局所の `AGENTS.md` はスコープ内の通常ルールを具体化できるが、上位の名前付き不変条件を弱めず、完全な優先順位規則に従う。
 ```
 
 Local:
@@ -45,7 +46,7 @@ Local:
 このファイルは、このディレクトリ配下における Codex の局所 `AGENTS.md` であり、本スコープ内の実行条件を定義する SSOT である。
 本書は助言集ではなく、既定動作、禁止事項、優先順位、ツール選択、検証条件を拘束する運用契約として扱う。
 上位の `AGENTS.md`、システム指示、開発者指示、ユーザーの明示要求と競合する場合は、Codex の優先順位規則に従う。
-より深い階層に別の `AGENTS.md` が存在する場合、そのスコープではより局所のファイルを優先する。
+より深い階層の `AGENTS.md` は、そのスコープ内の通常ルールを具体化できるが、上位の名前付き不変条件を弱めない。
 ```
 
 ## When To Use
@@ -71,12 +72,25 @@ Use this order:
 5. If the user asks for the global constitution, use `~/.codex/AGENTS.md`.
 6. If more than one target is plausible, stop and ask for the target path.
 
-Do not audit multiple `AGENTS.md` files in one pass unless the user explicitly asks for cross-scope comparison. For cross-scope comparison, identify the local and global files separately and preserve the local-over-global priority order.
+Applicable higher-scope `AGENTS.md` files are authority inputs, not additional audit targets. Read only the higher-scope text needed to interpret the target and its governing priority order.
+
+Do not audit multiple target `AGENTS.md` files in one pass unless the user explicitly asks for cross-scope comparison. For cross-scope comparison, identify each target separately and preserve the complete applicable authority order rather than assuming blanket local-over-global precedence.
+
+## Operation Modes And Ownership
+
+Select one operation before production:
+
+- Review mode is read-only. It returns findings and tighter replacement wording without editing the target.
+- Edit mode authors one complete first-pass candidate that integrates every known requirement before final clarification.
+
+In edit mode, finish construction before starting the final clarifier decision. Starting that decision seals the candidate and makes the clarifier phase read-only: it may confirm the final bytes or return a concrete failed finding, but it must not patch, finish, or reinterpret the candidate while acting as checker.
+
+If that admitted final decision fails, end the checker phase and apply the applicable cause-bound recovery rule to the smallest affected authoring scope. The checker does not become the repair producer. The applicable `AGENTS.md` owns the number, independence, order, and rerun conditions of required checks; this skill does not add a generic second review or replace an exact acceptance bundle.
 
 ## Audit Workflow
 
 1. Resolve exactly one target `AGENTS.md` using the Target Resolution rules.
-2. Read the target `AGENTS.md` completely and determine whether it is global or local.
+2. Read the target `AGENTS.md` completely, determine whether it is global or local, and read only the applicable higher-scope authority needed to interpret it.
 3. Check whether the target already has an SSOT or equivalent execution-contract declaration for its scope.
 4. If the declaration is missing and the user asked for edits, add the appropriate declaration before other rewrites. If the user asked for review only, report the missing declaration as the first finding and include the declaration to add.
 5. Isolate the sections that control behavior, tool choice, ordering, escalation, delegation, file ownership, or browser mode selection.
@@ -85,11 +99,12 @@ Do not audit multiple `AGENTS.md` files in one pass unless the user explicitly a
    - subordinate alignment issue: the nearby text should be rewritten to follow `AGENTS.md`
    - migration candidate: the nearby text contains a durable execution rule that belongs in `AGENTS.md`
    - non-binding context: the nearby text can remain explanatory and must not be treated as an execution contract
-8. Check whether high-risk decisions, debugging, review, source-of-truth edits, skill/plugin maintenance, hooks, MCP/app settings, external writes, deletion, and persistent data changes have an explicit reasoning and verification contract. The contract must separate premises, evidence, counterevidence or exception checks, unknowns, validation results, and stop conditions when those elements affect execution.
+8. When the target governs high-risk decisions, debugging, source-of-truth edits, hooks, MCP/app settings, external writes, deletion, or persistent data, check whether it correctly inherits or locally specializes the applicable named reasoning and verification invariants. Flag a conflict, weakening, or unnecessary duplicate; do not require a local copy of a higher-scope kernel.
 9. Check AGENTS.md maintenance gates:
-   - If the target governs global or reusable Codex behavior, it must say that creating, revising, or materially updating an `AGENTS.md` requires `agents-md-clarifier` before final reporting, cache/runtime reflection, or commit.
-   - If the target governs a narrower workspace and clearly inherits the global gate, accept delegation to the global gate; any local override must preserve the same completion condition.
-   - Do not require a local `AGENTS.md` to duplicate the full global contract when it clearly inherits it and does not narrow or override it.
+   - Identify which applicable `AGENTS.md` owns the maintenance decision before proposing text.
+   - If the target is that owner, confirm its current maintenance rule has an executable completion condition.
+   - If a narrower target clearly inherits the owning rule, accept that inheritance; flag only a conflicting or weakening local override.
+   - Do not insert a duplicate maintenance gate solely because this skill describes the audit route.
 10. Distinguish four categories:
    - True contradiction: two statements cannot both be followed.
    - Decision ambiguity: the intent is visible but the trigger or priority is under-specified.
@@ -125,31 +140,19 @@ When the target controls role or tool selection, make the boundary executable:
 - Keep global rules in global `AGENTS.md` and local workflow rules in the most specific applicable `AGENTS.md` or implementation source.
 - Do not move binding policy into README, comments, memories, or UI metadata unless `AGENTS.md` explicitly delegates that authority.
 
-## Reasoning Contract Checks
+## Applicable-Kernel Alignment
 
-When the target touches high-risk execution, make the reasoning path executable:
+The applicable `AGENTS.md` hierarchy owns cross-cutting reasoning, producer, acceptance, success, and recovery rules. This skill owns only the AGENTS-specific mechanics for locating those rules and testing the target against them; it does not restate or supply a second execution kernel.
 
-- Require Codex to separate premises, evidence, counterevidence or exception checks, unknowns, and validation results before finalizing the action.
-- Treat numeric confidence, named prompting techniques, persona debate, and self-review as insufficient unless they are tied to concrete evidence and verification conditions.
-- Require explicit stop conditions when evidence is missing, the source of truth cannot be resolved, validation cannot be run, or competing authorities conflict.
-- Keep reusable global reasoning policy in global `AGENTS.md`; put only local refinements or stricter gates into local `AGENTS.md`.
-- When auditing a skill, plugin, hook, or nearby workflow against `AGENTS.md`, flag missing reasoning-contract handling as a subordinate alignment issue unless the target is intentionally simple and has no high-risk judgment surface.
+When the target contains rules in those domains:
 
-## Producer Quality And Verification Topology
+- map each rule to its owning higher rule or named invariant when one exists
+- verify that local text specializes only its declared scope and preserves the owning rule's operational effect
+- trace target-declared producer, checker, coordinator, and handoff roles to find overlapping ownership or a downstream layer that is expected to finish known semantics
+- flag duplicated same-decision checks, unsupported post-success gates, or a local bypass only by reference to the applicable owning contract
+- do not insert a canned reasoning checklist, generic acceptance bundle, or recovery policy when the target already inherits the decision
 
-The authoring producer owns first-pass semantic quality. An applicable `agents-md-clarifier` run is an explicitly selected maintenance audit that confirms the final contract after an `AGENTS.md` edit; it is not a recurring application/output gate or a substitute producer.
-
-Classify a producer-quality / verification-topology defect when the target:
-
-- defines `draft -> review/validator -> repair` as the normal successful path, or intentionally leaves known semantic requirements for a downstream layer
-- performs gate relabeling or binding-check laundering by calling a binding check review, audit, advisory, optional, or another name while it still controls the same completion decision
-- serializes duplicate semantic bundles over the same evidence, implementation path, and decision
-- adds a post-success second layer without distinct new evidence that would change the decision
-- permits lower-layer first-pass bypass of a higher-priority producer-quality or minimum-verification rule
-
-Accept a coherent first pass followed by one minimum verification bundle containing the binding checks, primary-path evidence, and task-evidenced distinct failures. A failed check may trigger repair of the affected scope and a targeted rerun. Do not flag the single applicable clarifier maintenance audit merely because it follows editing; flag reliance on that audit to create semantics, duplication of its decision, or an added post-success layer. Do not require an ordinary bounded contract with no high-risk judgment surface to add a generic reasoning checklist, reviewer, validator, or second gate.
-
-When this defect appears, assign semantic production to the producer, consolidate same-decision checks into the minimum bundle, and remove unsupported post-success layers. This category audits responsibility and verification topology; it does not move artifact-specific production decision logic into `AGENTS.md`.
+If the target itself owns a cross-cutting rule, audit whether its own triggers, owners, evidence, and stop conditions are executable. Base any rewrite on the user's current policy and applicable higher authority instead of importing a reusable kernel from this skill.
 
 ## What To Preserve
 
@@ -159,7 +162,7 @@ Preserve the original:
 - priority order
 - safety constraints
 - user intent
-- local-over-global precedence
+- the complete applicable authority order, including higher named invariants and lawful local specialization
 - domain-specific terminology
 
 Only strengthen wording when it reduces interpretive drift without changing policy.
@@ -175,6 +178,7 @@ When reviewing, output:
 
 When editing, make the patch and summarize:
 
+- which operation mode was used and where construction ended before final clarification
 - whether an SSOT declaration was added or already present
 - what behavior is now explicit
 - what ambiguity was removed
@@ -188,9 +192,10 @@ Pay extra attention to these recurrent failure patterns:
 - `AGENTS.md` files that lack an SSOT or equivalent execution-contract declaration
 - "soft" verbs that lead to non-action
 - instructions that describe intent but not trigger conditions
-- reasoning requirements that do not separate premises, evidence, counterevidence, unknowns, validation, and stop conditions
-- `AGENTS.md` maintenance rules that do not require `agents-md-clarifier` as an editing completion gate
+- local reasoning or verification text that conflicts with, weakens, or needlessly duplicates its applicable owning contract
+- `AGENTS.md` maintenance rules that conflict with or weaken the applicable owning maintenance invariant
 - tool descriptions that do not define role boundaries
 - sequencing rules that rely on implied order
-- delegation text that says "first candidate" but does not actually require delegation
+- producer/checker text that does not identify the construction-to-final-decision boundary
+- delegation text that promises a handoff without defining ownership or the completed output
 - policy text that sounds authoritative but still allows the model to default to doing nothing

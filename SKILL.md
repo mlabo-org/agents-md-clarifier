@@ -1,6 +1,6 @@
 ---
 name: agents-md-clarifier
-description: "Audit/edit one global or local AGENTS.md execution contract: SSOT and authority order, weak wording, producer/checker and tool/delegation ownership, maintenance alignment, and nearby instruction drift. Use for AGENTS.md creation, review, tightening, or refactor."
+description: "Audit/edit one global or local AGENTS.md for interpretation drift (解釈ぶれ), explicit decision flow, and policy-preserving clarity; cover SSOT, authority, ownership, and maintenance. Use for AGENTS.md creation, review, clarification, or refactor."
 ---
 
 # AGENTS.md Clarifier
@@ -12,13 +12,19 @@ This file does not override system instructions, developer instructions, explici
 ## Overview
 
 This skill audits `AGENTS.md` as an execution contract, not as explanatory prose.
-Use it to tighten wording, remove ambiguity, clarify tool and role boundaries, and rewrite soft guidance into explicit operating conditions.
+Use it to make conditions and action flow explicit while preserving authority, policy strength, and intentional discretion.
 
 ## Core Rule
 
 Treat every `AGENTS.md` statement as an execution condition unless it is clearly explanatory context, an example, or an intentionally non-binding note.
-If wording leaves easy escape hatches such as "consider", bare "prefer", "generally", or "if appropriate", assume the instruction is weaker than intended unless the surrounding context clearly demands discretionary language.
+Determine the required behavior from the user's declared meaning and authoritative context. Do not downgrade a user-required action to optional merely because it says "recommended", "should", "prefer", or "推奨". Express its applicability, required action, and permitted exceptions explicitly. Preserve optionality only when authoritative input actually grants it; unresolved intent is a finding, not permission to skip.
 Treat `prefer X over Y` as an explicit default ordering only when the rule identifies the compared routes and preserves any governing exception or higher-priority condition.
+
+## Shared Clarity Criteria
+
+Before authoring or auditing, read [指示文の解釈を揃える基準](../skill-md-clarifier/references/instruction-clarity.md). This source resource is owned by the sibling standalone `skill-md-clarifier`; both clarifiers use the same maintained criteria. If that resource cannot be resolved, report the missing input and stop the affected clarity work instead of inventing a substitute.
+
+Apply the criteria to AGENTS-specific scope, authority inheritance, mandatory/default/discretionary actions, exception reach, role handoffs, and completion boundaries. In edit mode, supply them as authoring inputs before constructing the candidate; in review mode, use them read-only. Keep the final semantic decision within Operation Modes And Ownership below.
 
 ## SSOT Declaration Rule
 
@@ -94,7 +100,7 @@ If that admitted final decision fails, end the checker phase and apply the appli
 3. Check whether the target already has an SSOT or equivalent execution-contract declaration for its scope.
 4. If the declaration is missing and the user asked for edits, add the appropriate declaration before other rewrites. If the user asked for review only, report the missing declaration as the first finding and include the declaration to add.
 5. Isolate the sections that control behavior, tool choice, ordering, escalation, delegation, file ownership, or browser mode selection.
-6. Identify wording that weakens execution, especially ambiguity, optionality, fuzzy thresholds, duplicated authority, undefined trigger conditions, or body-only rules that should be visible earlier in the file.
+6. Apply Shared Clarity Criteria to behavior-controlling rules. Trace relevant conditions through the responsible actor's action, exceptions, handoff, and end state; identify concrete missing relations or action-changing interpretations rather than optional wording by itself.
 7. When auditing nearby instruction sets, skill text, wrapper script comments, or repo notes, compare them against the target `AGENTS.md` and classify each mismatch as one of:
    - subordinate alignment issue: the nearby text should be rewritten to follow `AGENTS.md`
    - migration candidate: the nearby text contains a durable execution rule that belongs in `AGENTS.md`
@@ -108,7 +114,7 @@ If that admitted final decision fails, end the checker phase and apply the appli
 10. Distinguish four categories:
    - True contradiction: two statements cannot both be followed.
    - Decision ambiguity: the intent is visible but the trigger or priority is under-specified.
-   - Weak execution wording: the sentence sounds strict to a human but leaves enough discretion that the model may do nothing.
+   - Weak execution wording: an authoritative requirement is established, but the sentence leaves its required trigger or action optional, including a required "推奨" that can be misread as skippable. Explicitly authorized permission or discretion is not this defect.
    - Producer-quality / verification-topology defect: the contract defers semantic quality to a later layer, launders or duplicates a binding check, or adds a same-decision post-success gate.
 11. Rewrite only as much as needed to preserve the user's intended policy while making the action path explicit.
 12. If the user asked for review only, report findings first with precise locations.
@@ -117,18 +123,7 @@ If that admitted final decision fails, end the checker phase and apply the appli
 
 ## Wording Rules
 
-Prefer verbs that directly constrain execution:
-
-- Strong: `use`, `do not use`, `treat as`, `must`, `always`, `only when`, `unless`, `first`, `after`, `before`, `prefer X over Y`, `if A, do B`
-- Weak: `consider`, `review`, `ideally`, `generally`, `basically`, `as needed`, `if appropriate`, `candidate`, `recommended`, `desirable`
-
-When tightening wording:
-
-- Replace weak modality with explicit triggers and outcomes.
-- Replace vague sequencing with ordered steps.
-- Replace overlapping responsibilities with named role boundaries.
-- Replace "may" style language unless the flexibility is intentional and necessary.
-- Keep exceptions explicit and narrow.
+Use the shared criteria's meaning-preservation boundary when changing modality, order, references, or examples. In an AGENTS.md, name the governing scope or rule when inheritance or an exception otherwise requires guesswork. Clarify only the relationships needed to determine action; do not duplicate the inherited rule or convert permitted judgment into a mandatory procedure.
 
 ## Boundary Checks
 
@@ -165,7 +160,7 @@ Preserve the original:
 - the complete applicable authority order, including higher named invariants and lawful local specialization
 - domain-specific terminology
 
-Only strengthen wording when it reduces interpretive drift without changing policy.
+Clarify wording within the user's declared policy, making intended obligations explicit even when the old words sound advisory. If clarification would require choosing an unresolved policy, report that decision instead of weakening its binding force or inventing another obligation.
 
 ## Output Shape
 
@@ -174,7 +169,9 @@ When reviewing, output:
 - the issue
 - why it weakens execution
 - the exact section or line reference
-- a tighter rewrite
+- a source-grounded rewrite, or the unresolved policy decision under the shared criteria's output branch
+
+For an interpretation finding, include the concrete condition, the supported competing actions or missing relation, and the policy boundary the rewrite preserves. Use existing issue, rationale, location, and rewrite fields; do not invent a separate result format. When the policy is unresolved, put that unresolved decision in `tighterRewrite` rather than filling it with invented conditions. Distinguish document-based evidence from any actual model execution evidence.
 
 When editing, make the patch and summarize:
 
@@ -190,7 +187,7 @@ When editing, make the patch and summarize:
 Pay extra attention to these recurrent failure patterns:
 
 - `AGENTS.md` files that lack an SSOT or equivalent execution-contract declaration
-- "soft" verbs that lead to non-action
+- an established obligation whose trigger or action is left optional
 - instructions that describe intent but not trigger conditions
 - local reasoning or verification text that conflicts with, weakens, or needlessly duplicates its applicable owning contract
 - `AGENTS.md` maintenance rules that conflict with or weaken the applicable owning maintenance invariant

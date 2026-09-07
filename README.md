@@ -4,44 +4,62 @@
 
 ## 日本語
 
-`agents-md-clarifier` は、グローバルまたはローカルの `AGENTS.md` を、単なる説明文ではなく実行契約として監査・編集する Codex スキルです。
+`agents-md-clarifier` は、グローバルまたはローカルの `AGENTS.md` を、説明文ではなく実行契約として監査・編集する Codex スキルです。目的は、読み手の推論深度が違っても、同じ事実と権限から同じ必須行動、禁止、許容範囲、停止判断、要求結果、完了条件を読み取れる指示にすることです。
 
-### 監査対象
+これはモデル間の実行結果を実測したり、決定論的な一致を保証したりする仕組みではありません。指示に必要な条件と関係を明示し、読み手が常識や推測で補う余地を減らします。実際のモデル比較や追加評価は、このスキルから自動的には発生しません。
 
-- スコープに応じた SSOT 宣言と権限の優先順位
-- 弱い、曖昧、重複、または矛盾した指示
-- producer ownership と単一の semantic acceptance bundle による検証トポロジー
+### 何を確認するか
+
+- 対象スコープの SSOT 宣言と、適用される権限の優先順位
+- 弱い、曖昧、重複、または矛盾した実行指示
+- 適用条件、担当、入力、行動、順序、受け渡し、分岐、例外、停止、完了の関係
+- 作成者の責任と、既存の最終監査における一つの意味上の受入判断
 - reasoning、maintenance、tool、delegation、source、runtime の境界
-- `AGENTS.md` と周辺の skill、wrapper、instruction との整合性
+- `AGENTS.md` と周辺の skill、wrapper、instruction の整合性
 
-このスキルは、ユーザーの意図と local-over-global の優先順位を維持します。任意のスタイル上の好みを新しいポリシーに変えたり、clarifier の監査を first-pass semantic ownership の代わりに使ったりしません。
+### 拘束力と「推奨」の扱い
 
-### 保守ソースと公開リポジトリの関係
+明確化によって指示の拘束力を弱めません。読みやすさ、短文化、低推論への配慮を理由に、実行義務を任意へ変えたり、例外・裁量・省略の範囲を広げたりする候補は受け入れません。
 
-このスキルの保守環境では、次の二者を同じ Git 履歴として管理します。
+単語だけで義務や任意性を決めません。ユーザー要求や適用される正本が実行を求めている「推奨」「そうするべき」「prefer」は、適用条件を満たしたら実行する指示として具体化します。方法の選択が許されていても、不実行の許可へ読み替えません。任意性を残せるのは、権限のある入力が選択や省略を明示している場合だけです。意味を決める根拠が不足している場合は、勝手に条件を足さず、未確定の判断として返します。
 
-- 保守用の正本・Git working tree・Codex USER discovery: この skill を配置したユーザーskillディレクトリ
-- 同じ Git 履歴の公開 remote: [mlabo-org/agents-md-clarifier](https://github.com/mlabo-org/agents-md-clarifier)
+### 作成・監査の流れ
 
-編集は保守用の正本だけで行います。Codex はその正本を直接読み込む構成を前提とし、cacheやruntime copyを正本にしません。変更のcommitは、現在の明示的な承認がある場合に限って行います。GitHubへの公開（`origin/main` へのpush）は、公開についての現在の明示的な承認が別途ある場合に限る、commitとは分離した段階です。
+編集では、対象の正本、ユーザー要求、関係する既知の条件を作成前の入力として揃えます。その入力から、完全な候補を一度で構成します。既存の最終監査は、候補を補完・再構成する工程ではなく、拘束力と意味の境界が保たれているかを確認する工程です。最終監査のために既知の要件を後から追加したり、通常の修正ループを増やしたりしません。
 
-### 公開版のインストール
+レビューは読み取り専用です。編集モードは、指定された対象の変更だけを行います。対象は一つに確定し、曖昧な対象、競合する権威、見つからない正本、または必要な共有基準がない場合は、推測で進めず停止します。
 
-通常の standalone skill として直接インストールする場合は、公開 repository を Codex の skill directory に clone します。
+正本やユーザー要求から判断が確定している場合は、その根拠を示して条件と行動の関係を明確にします。条件、例外、続行可否などの方針が正本にない場合は、監査者が新しい方針を作らず、不足する決定と分かれる行動を返します。
 
-```bash
-git clone https://github.com/mlabo-org/agents-md-clarifier.git <user-skill-directory>/agents-md-clarifier
-```
+### 共有基準への依存
 
-インストール後は、Codex を再起動するか新しいタスクを開始してください。
+このスキルは、兄弟スキル `skill-md-clarifier` が管理する [指示文の解釈を揃える基準](https://github.com/mlabo-org/skill-md-clarifier/blob/main/references/instruction-clarity.md) を `../skill-md-clarifier/references/instruction-clarity.md` から読みます。基準本文をこの README に複製していません。共有基準を解決できない場合、該当する明確化監査を停止します。
 
-### 使用例
+二つの standalone skill は、Codex の同じユーザー skill root に兄弟ディレクトリとして配置してください。
 
 ```text
-Use $agents-md-clarifier to audit this AGENTS.md and tighten its execution contract.
+<user-skill-directory>/
+├── agents-md-clarifier/
+└── skill-md-clarifier/
+    └── references/instruction-clarity.md
 ```
 
-このスキルは対象となる `AGENTS.md` を1つに確定して全文を読み、契約上の欠陥を分類し、依頼された編集またはレビューの範囲だけを適用して、変更されたソースと検証境界を報告します。
+通常の例として `~/.agents/skills` に clone する場合:
+
+```bash
+git clone https://github.com/mlabo-org/agents-md-clarifier.git ~/.agents/skills/agents-md-clarifier
+git clone https://github.com/mlabo-org/skill-md-clarifier.git ~/.agents/skills/skill-md-clarifier
+```
+
+別の skill root を使う場合も、二つの repository を同じ親ディレクトリに clone してください。インストール後は Codex を再起動するか、新しいタスクを開始してください。
+
+### インストール後の使用例
+
+```text
+Use $agents-md-clarifier to audit this AGENTS.md and preserve its policy strength while making the decision flow explicit.
+```
+
+このスキルは対象の `AGENTS.md` を一つに確定して全文を読み、実行契約上の欠陥を分類し、依頼されたレビューまたは編集の範囲だけを適用して、変更された正本と検証境界を報告します。実行契約そのものは `SKILL.md` と共有基準が定めます。この README は利用説明です。
 
 ### リポジトリ構成
 
@@ -65,44 +83,62 @@ MIT
 
 ## English
 
-`agents-md-clarifier` is a Codex skill that audits or edits global and local `AGENTS.md` files as execution contracts rather than loose guidance.
+`agents-md-clarifier` is a Codex skill for auditing or editing global and local `AGENTS.md` files as execution contracts rather than explanatory prose. Its purpose is to make readers with different reasoning depths derive the same required actions, prohibitions, permitted range, stop decisions, requested result, and completion condition from the same facts and authority.
 
-### What it audits
+This does not measure model behavior or guarantee deterministic agreement between models. It makes the necessary conditions and relationships explicit so that readers have less need to fill gaps with assumptions. Model comparisons and extra evaluation stages do not arise automatically from this skill.
 
-- Scoped SSOT declarations and authority order
-- Weak, ambiguous, duplicated, or contradictory instructions
-- Producer ownership and verification topology based on one semantic acceptance bundle
+### What it checks
+
+- The scoped SSOT declaration and applicable authority order
+- Weak, ambiguous, duplicated, or contradictory execution instructions
+- The relationships among scope, actor, inputs, actions, ordering, handoffs, branches, exceptions, stops, and completion
+- Producer ownership and one semantic acceptance decision in the existing final audit
 - Reasoning, maintenance, tool, delegation, source, and runtime boundaries
 - Alignment between `AGENTS.md` and nearby skills, wrappers, or instructions
 
-The skill preserves user intent and local-over-global precedence. It does not turn optional style preferences into new policy or use a clarifier audit as a substitute for first-pass semantic ownership.
+### Preserving force, including “recommended” wording
 
-### Maintainer source and public repository relationship
+Clarification must never weaken an instruction. A candidate is rejected if readability, shortening, or accommodation for lower reasoning turns a required action into an option or expands exceptions, discretion, or omission.
 
-In the maintainer environment, the following two locations share one Git history:
+Modality is determined from the user request and applicable authoritative source, not from one word in isolation. When an authoritative request gives execution force to “recommended,” “should,” or “prefer,” the instruction is made concrete as: perform it when its applicability condition holds. Permission to choose a method does not become permission to skip the action. Optionality remains only when an authorized input explicitly grants a choice or omission. If the source does not settle the policy, the skill reports the unresolved decision and does not invent conditions.
 
-- Maintainer source, Git working tree, and Codex USER discovery: the user's configured skill directory
-- Public remote for the same Git history: [mlabo-org/agents-md-clarifier](https://github.com/mlabo-org/agents-md-clarifier)
+### Authoring and audit flow
 
-Edits are made only in the maintainer source. The source remains authoritative; cache and runtime copies are not treated as source. A change is committed in this repository only when currently explicitly authorized. Publishing to GitHub (pushing to `origin/main`) is a separate stage and requires separate current explicit authorization.
+In edit mode, the authoritative target, user request, and all known relevant conditions are supplied as inputs before construction. One complete candidate is then authored from those inputs. The existing final audit confirms that the candidate preserves the force and meaning boundary; it does not complete, reinterpret, or routinely rewrite the candidate. Known requirements are not deferred until the final audit, and an extra repair loop is not added as a default.
 
-### Public installation
+Review mode is read-only. Edit mode changes only the requested target. The skill resolves exactly one target and stops rather than guessing when the target is ambiguous, authorities conflict, the source of truth is unavailable, or the required shared criteria cannot be resolved.
 
-To install the public version directly as a standalone skill, clone the repository into the Codex skill directory:
+When the authoritative source or user request settles a decision, the result identifies that basis and makes the condition-to-action relationship explicit. When the source leaves a policy decision such as a condition, exception, or continuation rule unsettled, the skill reports the missing decision and the actions it would affect instead of creating a new policy.
 
-```bash
-git clone https://github.com/mlabo-org/agents-md-clarifier.git <user-skill-directory>/agents-md-clarifier
-```
+### Shared criteria dependency
 
-Restart Codex or begin a new task after installation.
+This skill reads the [Shared Instruction Clarity Criteria](https://github.com/mlabo-org/skill-md-clarifier/blob/main/references/instruction-clarity.md), maintained by the sibling skill `skill-md-clarifier`, at `../skill-md-clarifier/references/instruction-clarity.md`. The criteria are not duplicated in this README. If the shared criteria cannot be resolved, the affected clarity audit stops.
 
-### Usage
+Place both standalone skills as sibling directories in the same Codex user skill root:
 
 ```text
-Use $agents-md-clarifier to audit this AGENTS.md and tighten its execution contract.
+<user-skill-directory>/
+├── agents-md-clarifier/
+└── skill-md-clarifier/
+    └── references/instruction-clarity.md
 ```
 
-The skill resolves exactly one target `AGENTS.md`, reads it completely, classifies contract defects, applies only the requested edit or review scope, and reports the changed source and validation boundary.
+For the usual `~/.agents/skills` example:
+
+```bash
+git clone https://github.com/mlabo-org/agents-md-clarifier.git ~/.agents/skills/agents-md-clarifier
+git clone https://github.com/mlabo-org/skill-md-clarifier.git ~/.agents/skills/skill-md-clarifier
+```
+
+If you use another skill root, clone both repositories under the same parent directory. Restart Codex or start a new task after installation.
+
+### Usage after installation
+
+```text
+Use $agents-md-clarifier to audit this AGENTS.md and preserve its policy strength while making the decision flow explicit.
+```
+
+The skill resolves exactly one `AGENTS.md` target, reads it completely, classifies execution-contract defects, applies only the requested review or edit scope, and reports the changed source and validation boundary. The execution contract itself is defined by `SKILL.md` and the shared criteria. This README explains how to use the skill.
 
 ### Repository layout
 

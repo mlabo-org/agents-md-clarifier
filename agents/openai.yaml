@@ -1,4 +1,4 @@
 interface:
   display_name: "AGENTS.md 明確化監査"
-  short_description: "Audit AGENTS.md authority, ownership boundaries, SSOT, and weak wording"
-  default_prompt: "Use $agents-md-clarifier to audit or edit one global/local AGENTS.md execution contract: resolve the target, preserve the complete authority order, add missing SSOT wording, tighten weak instructions, check producer/checker and tool/delegation ownership, align maintenance rules without duplicating the global kernel, and report nearby instruction drift."
+  short_description: "Audit AGENTS.md decision clarity and preserve policy meaning"
+  default_prompt: "Use $agents-md-clarifier to audit or edit one AGENTS.md for interpretation drift (解釈ぶれ), explicit conditions and action flow, while preserving policy strength, authority, exceptions, discretion, and SSOT."

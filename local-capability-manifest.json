@@ -8,7 +8,7 @@
     {
       "leafId": "audit-edit-agents-md",
       "title": "Audit or Edit an AGENTS.md Execution Contract",
-      "description": "Resolve one declared AGENTS.md target, then audit it or apply the requested contract-tightening edits according to the authoritative agents-md-clarifier skill.",
+      "description": "Resolve one declared AGENTS.md target and use the shared clarity criteria through agents-md-clarifier to audit interpretation drift or apply requested policy-preserving edits to conditions, action flow, and authority boundaries.",
       "executionClass": "host_model_with_tools",
       "runtimeBinding": {
         "kind": "host_model_with_tools",

@@ -30,7 +30,7 @@ Apply the criteria to AGENTS-specific scope, authority inheritance, mandatory/de
 
 When the target `AGENTS.md` does not already declare that it is the SSOT or an equivalent execution contract for its scope, add an appropriate declaration before tightening individual rules.
 
-- Global target: use a global SSOT declaration when the file is `~/.codex/AGENTS.md`, is identified by the user as the global constitution, or explicitly governs all workspaces.
+- Global target: use a global SSOT declaration when the file is `~/.claude/AGENTS.md`, is identified by the user as the global constitution, or explicitly governs all workspaces.
 - Local target: use a scoped SSOT declaration for any workspace or subdirectory `AGENTS.md`.
 - Do not duplicate an existing equivalent declaration. Treat wording such as "SSOT", "execution contract", "operational contract", "binding instructions", or "source of truth for this scope" as equivalent when it clearly binds Codex behavior.
 - Insert the declaration at the start of the file. If the file has YAML frontmatter, insert it after the frontmatter. If the file begins with a single H1 title, insert it immediately after that title.
@@ -41,7 +41,7 @@ Use these templates unless the existing document needs narrower wording:
 Global:
 
 ```md
-このファイルは `~/.codex/AGENTS.md` として機能するグローバル指示であり、Codex の共通実行条件を定義する SSOT である。
+このファイルは `~/.claude/AGENTS.md` として機能するグローバル指示であり、Claude Code の共通実行条件を定義する SSOT である。
 本書は助言集ではなく、既定動作、禁止事項、優先順位、ツール選択、検証条件を拘束する運用契約として扱う。
 より局所の `AGENTS.md` はスコープ内の通常ルールを具体化できるが、上位の名前付き不変条件を弱めず、完全な優先順位規則に従う。
 ```
@@ -75,7 +75,7 @@ Use this order:
 2. If the user provides a structured file reference with a `path`, use that path when it points to an `AGENTS.md`.
 3. If the current working directory contains `AGENTS.md`, treat `./AGENTS.md` as the target.
 4. If the current working directory is inside a workspace with one or more ancestor `AGENTS.md` files, use the nearest ancestor unless the user clearly asks for the global file.
-5. If the user asks for the global constitution, use `~/.codex/AGENTS.md`.
+5. If the user asks for the global constitution, use `~/.claude/AGENTS.md`. `~/.codex/AGENTS.md` is Codex's source; edit it only when the user explicitly asks for a Codex-side change.
 6. If more than one target is plausible, stop and ask for the target path.
 
 Applicable higher-scope `AGENTS.md` files are authority inputs, not additional audit targets. Read only the higher-scope text needed to interpret the target and its governing priority order.

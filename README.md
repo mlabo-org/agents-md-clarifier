@@ -4,7 +4,7 @@
 
 ## 日本語
 
-`agents-md-clarifier` は、グローバルまたはローカルの `AGENTS.md` を、説明文ではなく実行契約として監査・編集する Codex スキルです。目的は、読み手の推論深度が違っても、同じ事実と権限から同じ必須行動、禁止、許容範囲、停止判断、要求結果、完了条件を読み取れる指示にすることです。
+`agents-md-clarifier` は、グローバルまたはローカルの `AGENTS.md` を、説明文ではなく実行契約として監査・編集する Claude Code スキルです。目的は、読み手の推論深度が違っても、同じ事実と権限から同じ必須行動、禁止、許容範囲、停止判断、要求結果、完了条件を読み取れる指示にすることです。
 
 これはモデル間の実行結果を実測したり、決定論的な一致を保証したりする仕組みではありません。指示に必要な条件と関係を明示し、読み手が常識や推測で補う余地を減らします。実際のモデル比較や追加評価は、このスキルから自動的には発生しません。
 
@@ -35,7 +35,7 @@
 
 このスキルは、兄弟スキル `skill-md-clarifier` が管理する [指示文の解釈を揃える基準](https://github.com/mlabo-org/skill-md-clarifier/blob/main/references/instruction-clarity.md) を `../skill-md-clarifier/references/instruction-clarity.md` から読みます。基準本文をこの README に複製していません。共有基準を解決できない場合、該当する明確化監査を停止します。
 
-二つの standalone skill は、Codex の同じユーザー skill root に兄弟ディレクトリとして配置してください。
+二つの standalone skill は、Claude Code の同じユーザー skill root（`~/.claude/skills`） に兄弟ディレクトリとして配置してください。
 
 ```text
 <user-skill-directory>/
@@ -44,14 +44,14 @@
     └── references/instruction-clarity.md
 ```
 
-通常の例として `~/.agents/skills` に clone する場合:
+通常の例として `~/.claude/skills` に clone する場合:
 
 ```bash
-git clone https://github.com/mlabo-org/agents-md-clarifier.git ~/.agents/skills/agents-md-clarifier
-git clone https://github.com/mlabo-org/skill-md-clarifier.git ~/.agents/skills/skill-md-clarifier
+git clone https://github.com/mlabo-org/agents-md-clarifier.git ~/.claude/skills/agents-md-clarifier
+git clone https://github.com/mlabo-org/skill-md-clarifier.git ~/.claude/skills/skill-md-clarifier
 ```
 
-別の skill root を使う場合も、二つの repository を同じ親ディレクトリに clone してください。インストール後は Codex を再起動するか、新しいタスクを開始してください。
+別の skill root を使う場合も、二つの repository を同じ親ディレクトリに clone してください。インストール後は Claude Code を再起動するか、新しいセッションを開始してください。
 
 ### インストール後の使用例
 
@@ -83,7 +83,7 @@ MIT
 
 ## English
 
-`agents-md-clarifier` is a Codex skill for auditing or editing global and local `AGENTS.md` files as execution contracts rather than explanatory prose. Its purpose is to make readers with different reasoning depths derive the same required actions, prohibitions, permitted range, stop decisions, requested result, and completion condition from the same facts and authority.
+`agents-md-clarifier` is a Claude Code skill for auditing or editing global and local `AGENTS.md` files as execution contracts rather than explanatory prose. Its purpose is to make readers with different reasoning depths derive the same required actions, prohibitions, permitted range, stop decisions, requested result, and completion condition from the same facts and authority.
 
 This does not measure model behavior or guarantee deterministic agreement between models. It makes the necessary conditions and relationships explicit so that readers have less need to fill gaps with assumptions. Model comparisons and extra evaluation stages do not arise automatically from this skill.
 
@@ -114,7 +114,7 @@ When the authoritative source or user request settles a decision, the result ide
 
 This skill reads the [Shared Instruction Clarity Criteria](https://github.com/mlabo-org/skill-md-clarifier/blob/main/references/instruction-clarity.md), maintained by the sibling skill `skill-md-clarifier`, at `../skill-md-clarifier/references/instruction-clarity.md`. The criteria are not duplicated in this README. If the shared criteria cannot be resolved, the affected clarity audit stops.
 
-Place both standalone skills as sibling directories in the same Codex user skill root:
+Place both standalone skills as sibling directories in the same Claude Code user skill root (`~/.claude/skills`):
 
 ```text
 <user-skill-directory>/
@@ -123,14 +123,14 @@ Place both standalone skills as sibling directories in the same Codex user skill
     └── references/instruction-clarity.md
 ```
 
-For the usual `~/.agents/skills` example:
+For the usual `~/.claude/skills` example:
 
 ```bash
-git clone https://github.com/mlabo-org/agents-md-clarifier.git ~/.agents/skills/agents-md-clarifier
-git clone https://github.com/mlabo-org/skill-md-clarifier.git ~/.agents/skills/skill-md-clarifier
+git clone https://github.com/mlabo-org/agents-md-clarifier.git ~/.claude/skills/agents-md-clarifier
+git clone https://github.com/mlabo-org/skill-md-clarifier.git ~/.claude/skills/skill-md-clarifier
 ```
 
-If you use another skill root, clone both repositories under the same parent directory. Restart Codex or start a new task after installation.
+If you use another skill root, clone both repositories under the same parent directory. Restart Claude Code or start a new session after installation.
 
 ### Usage after installation
 

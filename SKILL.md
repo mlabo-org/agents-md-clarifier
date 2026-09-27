@@ -6,7 +6,7 @@ description: "Audit/edit one global or local AGENTS.md for interpretation drift 
 # AGENTS.md Clarifier
 
 This `SKILL.md` is the local execution contract for this skill when the skill is selected.
-Claude Code must treat this file's trigger assumptions, workflow, tool boundaries, file boundaries, and output shape as binding instructions within this skill's scope.
+The host agent (Codex or Claude Code) must treat this file's trigger assumptions, workflow, tool boundaries, file boundaries, and output shape as binding instructions within this skill's scope.
 This file does not override system instructions, developer instructions, explicit user requests, applicable `AGENTS.md` files, or more specific local execution contracts.
 
 ## Overview
@@ -30,28 +30,28 @@ Apply the criteria to AGENTS-specific scope, authority inheritance, mandatory/de
 
 When the target `AGENTS.md` does not already declare that it is the SSOT or an equivalent execution contract for its scope, add an appropriate declaration before tightening individual rules.
 
-- Global target: use a global SSOT declaration when the file is `~/.claude/AGENTS.md`, is identified by the user as the global constitution, or explicitly governs all workspaces.
+- Global target: use a global SSOT declaration when the file is the host's global rules file (Codex: `~/.codex/AGENTS.md`; Claude Code: `~/.claude/AGENTS.md`), is identified by the user as the global constitution, or explicitly governs all workspaces.
 - Local target: use a scoped SSOT declaration for any workspace or subdirectory `AGENTS.md`.
-- Do not duplicate an existing equivalent declaration. Treat wording such as "SSOT", "execution contract", "operational contract", "binding instructions", or "source of truth for this scope" as equivalent when it clearly binds Claude Code behavior.
+- Do not duplicate an existing equivalent declaration. Treat wording such as "SSOT", "execution contract", "operational contract", "binding instructions", or "source of truth for this scope" as equivalent when it clearly binds the host agent's behavior.
 - Insert the declaration at the start of the file. If the file has YAML frontmatter, insert it after the frontmatter. If the file begins with a single H1 title, insert it immediately after that title.
 - Preserve the complete applicable priority order. A more-local ordinary rule may specialize an ordinary higher-scope rule, but it must not weaken a higher-priority named invariant or another rule that the applicable authority order places above it.
 
 Use these templates unless the existing document needs narrower wording:
 
-Global:
+Global (replace `<global-path>` and `<agent>` with the target's host: `~/.codex/AGENTS.md` and Codex, or `~/.claude/AGENTS.md` and Claude Code):
 
 ```md
-このファイルは `~/.claude/AGENTS.md` として機能するグローバル指示であり、Claude Code の共通実行条件を定義する SSOT である。
+このファイルは `<global-path>` として機能するグローバル指示であり、<agent> の共通実行条件を定義する SSOT である。
 本書は助言集ではなく、既定動作、禁止事項、優先順位、ツール選択、検証条件を拘束する運用契約として扱う。
 より局所の `AGENTS.md` はスコープ内の通常ルールを具体化できるが、上位の名前付き不変条件を弱めず、完全な優先順位規則に従う。
 ```
 
-Local:
+Local (`<agent>` is the agent that reads the file: Codex, Claude Code, or both as "Codex と Claude Code"):
 
 ```md
-このファイルは、このディレクトリ配下における Claude Code の局所 `AGENTS.md` であり、本スコープ内の実行条件を定義する SSOT である。
+このファイルは、このディレクトリ配下における <agent> の局所 `AGENTS.md` であり、本スコープ内の実行条件を定義する SSOT である。
 本書は助言集ではなく、既定動作、禁止事項、優先順位、ツール選択、検証条件を拘束する運用契約として扱う。
-上位の `AGENTS.md`、システム指示、開発者指示、ユーザーの明示要求と競合する場合は、Claude Code の優先順位規則に従う。
+上位の `AGENTS.md`、システム指示、開発者指示、ユーザーの明示要求と競合する場合は、<agent> の優先順位規則に従う。
 より深い階層の `AGENTS.md` は、そのスコープ内の通常ルールを具体化できるが、上位の名前付き不変条件を弱めない。
 ```
 
@@ -60,7 +60,7 @@ Local:
 Use this skill when the user wants any of the following:
 
 - Review an `AGENTS.md` for contradictions, weak wording, or hard-to-apply rules.
-- Rewrite a global or local `AGENTS.md` so Claude Code behavior becomes more deterministic.
+- Rewrite a global or local `AGENTS.md` so the host agent's behavior becomes more deterministic.
 - Clarify tool roles such as `Computer Use`, Accessibility, `agent-browser`, or subagents.
 - Convert policy text into operational text with explicit triggers and outcomes.
 - Audit whether a skill file, wrapper script comment, or nearby instruction set aligns with `AGENTS.md`.
@@ -75,7 +75,7 @@ Use this order:
 2. If the user provides a structured file reference with a `path`, use that path when it points to an `AGENTS.md`.
 3. If the current working directory contains `AGENTS.md`, treat `./AGENTS.md` as the target.
 4. If the current working directory is inside a workspace with one or more ancestor `AGENTS.md` files, use the nearest ancestor unless the user clearly asks for the global file.
-5. If the user asks for the global constitution, use `~/.claude/AGENTS.md`. `~/.codex/AGENTS.md` is Codex's source; edit it only when the user explicitly asks for a Codex-side change.
+5. If the user asks for the global constitution, use the running host's global rules file: in Codex, `~/.codex/AGENTS.md`; in Claude Code, `~/.claude/AGENTS.md`. Edit the other host's global file only when the user explicitly names that host or path.
 6. If more than one target is plausible, stop and ask for the target path.
 
 Applicable higher-scope `AGENTS.md` files are authority inputs, not additional audit targets. Read only the higher-scope text needed to interpret the target and its governing priority order.

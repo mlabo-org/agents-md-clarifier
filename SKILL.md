@@ -80,6 +80,8 @@ Use this order:
 
 Applicable higher-scope `AGENTS.md` files are authority inputs, not additional audit targets. Read only the higher-scope text needed to interpret the target and its governing priority order.
 
+When the target is read by Claude Code, check how it is loaded before judging coverage: Claude Code reads `AGENTS.md` natively only when no `CLAUDE.md` (including `.claude/CLAUDE.md` and `CLAUDE.local.md`; `~/.claude/CLAUDE.md` does not count) exists in the working directory or any directory above it (v2.1.277 and later). Where one exists, the folder's `CLAUDE.md` must import it with `@AGENTS.md`.
+
 Do not audit multiple target `AGENTS.md` files in one pass unless the user explicitly asks for cross-scope comparison. For cross-scope comparison, identify each target separately and preserve the complete applicable authority order rather than assuming blanket local-over-global precedence.
 
 ## Operation Modes And Ownership
